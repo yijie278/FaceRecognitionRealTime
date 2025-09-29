@@ -13,6 +13,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import storage
+from datetime import datetime
 
 #also uplaod image to storage at the same time
 cred = credentials.Certificate("serviceAccountKey.json")
@@ -110,31 +111,60 @@ while True:
                 imgStudent = cv2.resize(imgStudent, (216, 216))
 
             #update data of attendance
-                ref=db.reference(f'Students/{id}')
-                studentInfo['Total attendance'] +=1
-                ref.child('Total attendance').set(studentInfo['Total attendance'])
+                datetimeObject= datetime.strptime(studentInfo['last_atttendance_time'],"%Y-%m-%d %H:%M:%S")
+                secondsElapsed= (datetime.now()-datetimeObject).total_seconds()
+                print(secondsElapsed)
+                if secondsElapsed > 30:
+                    ref=db.reference(f'Students/{id}')
+                    studentInfo['Total attendance'] +=1
+                    ref.child('Total attendance').set(studentInfo['Total attendance'])
+                    ref.child('last_atttendance_time').set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                else:
+                    modeType=3
+                    counter=0
+                    imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
-        cv2.putText(imgBackground,str(studentInfo['Total attendance']),(861,125),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
+        if modeType !=3:
 
-        cv2.putText(imgBackground, str(studentInfo['major']), (1006, 550), cv2.FONT_HERSHEY_COMPLEX, 0.5,
-                    (255, 255, 255), 1)
-        cv2.putText(imgBackground, str(id), (1006, 493), cv2.FONT_HERSHEY_COMPLEX, 0.5,
-                    (255,255,255), 1)
-        cv2.putText(imgBackground, str(studentInfo['standing']), (910, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
-                    (100,100,100), 1)
-        cv2.putText(imgBackground, str(studentInfo['year']), (1025, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
-                    (100, 100, 100), 1)
-        cv2.putText(imgBackground, str(studentInfo['starting_year']), (1125, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
-                    (100,100,100), 1)
+            if 10<counter<20:
+                modeType=2
 
-        (w,h), _= cv2.getTextSize(studentInfo['name'],cv2.FONT_HERSHEY_COMPLEX,1,1)
-        offset=(414-w)//2
-        cv2.putText(imgBackground, str(studentInfo['name']), (808+offset, 445), cv2.FONT_HERSHEY_COMPLEX, 1,
-                    (50, 50, 50), 1)
+            imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
 
-        imgBackground[175:175+216,909:909+216]=imgStudent
-        counter+=1
+
+            if counter <10:
+
+                cv2.putText(imgBackground,str(studentInfo['Total attendance']),(861,125),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
+
+                cv2.putText(imgBackground, str(studentInfo['major']), (1006, 550), cv2.FONT_HERSHEY_COMPLEX, 0.5,
+                            (255, 255, 255), 1)
+                cv2.putText(imgBackground, str(id), (1006, 493), cv2.FONT_HERSHEY_COMPLEX, 0.5,
+                            (255,255,255), 1)
+                cv2.putText(imgBackground, str(studentInfo['standing']), (910, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                            (100,100,100), 1)
+                cv2.putText(imgBackground, str(studentInfo['year']), (1025, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                            (100, 100, 100), 1)
+                cv2.putText(imgBackground, str(studentInfo['starting_year']), (1125, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                            (100,100,100), 1)
+
+                (w,h), _= cv2.getTextSize(studentInfo['name'],cv2.FONT_HERSHEY_COMPLEX,1,1)
+                offset=(414-w)//2
+                cv2.putText(imgBackground, str(studentInfo['name']), (808+offset, 445), cv2.FONT_HERSHEY_COMPLEX, 1,
+                            (50, 50, 50), 1)
+
+
+                imgBackground[175:175+216,909:909+216]=imgStudent
+            counter+=1
+
+
+            if counter >=20:
+                counter=0
+                modeType=0
+                studentInfo=[]
+                imgStudent=[]
+                imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
+
 
 
     #cv2.imshow("Webcam", img)
