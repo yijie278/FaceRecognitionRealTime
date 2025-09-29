@@ -2,7 +2,8 @@ import pickle
 import face_recognition
 import cv2
 import os
-
+import numpy as np
+import cvzone
 cap = cv2.VideoCapture(0)
 cap.set(3,640)  #camera size in image background
 cap.set(4,480)
@@ -46,11 +47,25 @@ while True:
     for encodeFace, faceLoc in zip(encodeCurFrame, faceCurFrame):
         matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
         faceDis=face_recognition.face_distance(encodeListKnown, encodeFace)
-        print("matches",matches)
-        print("faceDis",faceDis)
+        #print("matches",matches)
+        #print("faceDis",faceDis)
+
+        #find least index
+        matchIndex =np.argmin(faceDis)
+        #print("Match Index", matchIndex )
+
+        if matches[matchIndex]:
+            #print("Known Face Detected")
+            #print(studentIds[matchIndex])
+            #draw rectangle means it detect face either opencv or directly use cvzone
+            y1,x2,y2,x1 = faceLoc #rectangle detect the face
+            y1, x2, y2, x1= y1*4,x2*4,y2*4,x1*4 # multiply back by 4 as last time we reduce image size by 4
+            bbox=55+x1, 162+y1, x2-x1, y2-y1
+            imgBackground= cvzone.cornerRect(imgBackground,bbox,rt=0) #bounding box with rect thick is zero
 
 
 
-    cv2.imshow("Webcam", img)
+
+    #cv2.imshow("Webcam", img)
     cv2.imshow('Face Attendance', imgBackground)
     cv2.waitKey(1)
