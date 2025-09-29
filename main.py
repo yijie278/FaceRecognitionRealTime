@@ -4,6 +4,25 @@ import cv2
 import os
 import numpy as np
 import cvzone
+
+import cv2
+import face_recognition
+import pickle
+import os
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+from firebase_admin import storage
+
+#also uplaod image to storage at the same time
+cred = credentials.Certificate("serviceAccountKey.json")
+firebase_admin.initialize_app(cred,{
+    'databaseURL': "https://faceattendancerealtime-612a8-default-rtdb.firebaseio.com/",
+    'storageBucket': "faceattendancerealtime-612a8.firebasestorage.app"
+})
+
+bucket=storage.bucket()
+
 cap = cv2.VideoCapture(0)
 cap.set(3,640)  #camera size in image background
 cap.set(4,480)
@@ -26,7 +45,10 @@ file.close()
 encodeListKnown, studentIds= encodeListUnknownWithIds
 print("Encode File Loaded")
 
-
+modeType=0
+counter=0
+id=-1
+imgStudent=[]
 
 while True:
     success, img = cap.read()
@@ -40,7 +62,7 @@ while True:
 
 
     imgBackground[162:162+480,55:55+640]=img
-    imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[3]
+    imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
     # use zip so no need separate in two loop, encodeFace is current face
     # the lower distance , the better match
@@ -62,8 +84,57 @@ while True:
             y1, x2, y2, x1= y1*4,x2*4,y2*4,x1*4 # multiply back by 4 as last time we reduce image size by 4
             bbox=55+x1, 162+y1, x2-x1, y2-y1
             imgBackground= cvzone.cornerRect(imgBackground,bbox,rt=0) #bounding box with rect thick is zero
+            id=studentIds[matchIndex]
+
+            if counter==0:
+                counter=1
+                modeType=1
+
+    if counter !=0:
+
+        if counter ==1:
+            #get the data
+            studentInfo=db.reference(f'Students/{id}').get()
+            print(studentInfo)
+            # get the image from the storage
+            blob = bucket.get_blob(f'Images/{id}.png')
+            if blob is None:
+                blob = bucket.get_blob(f'Images/{id}.jpg')
+
+            if blob is None:
+                print(f"No image found for {id}")
+                imgStudent = np.zeros((216, 216, 3), dtype=np.uint8)  # fallback placeholder
+            else:
+                array = np.frombuffer(blob.download_as_string(), np.uint8)
+                imgStudent = cv2.imdecode(array, cv2.IMREAD_COLOR)
+                imgStudent = cv2.resize(imgStudent, (216, 216))
+
+            #update data of attendance
+                ref=db.reference(f'Students/{id}')
+                studentInfo['Total attendance'] +=1
+                ref.child('Total attendance').set(studentInfo['Total attendance'])
+
+        cv2.putText(imgBackground,str(studentInfo['Total attendance']),(861,125),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
+
+        cv2.putText(imgBackground, str(studentInfo['major']), (1006, 550), cv2.FONT_HERSHEY_COMPLEX, 0.5,
+                    (255, 255, 255), 1)
+        cv2.putText(imgBackground, str(id), (1006, 493), cv2.FONT_HERSHEY_COMPLEX, 0.5,
+                    (255,255,255), 1)
+        cv2.putText(imgBackground, str(studentInfo['standing']), (910, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                    (100,100,100), 1)
+        cv2.putText(imgBackground, str(studentInfo['year']), (1025, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                    (100, 100, 100), 1)
+        cv2.putText(imgBackground, str(studentInfo['starting_year']), (1125, 625), cv2.FONT_HERSHEY_COMPLEX, 0.6,
+                    (100,100,100), 1)
+
+        (w,h), _= cv2.getTextSize(studentInfo['name'],cv2.FONT_HERSHEY_COMPLEX,1,1)
+        offset=(414-w)//2
+        cv2.putText(imgBackground, str(studentInfo['name']), (808+offset, 445), cv2.FONT_HERSHEY_COMPLEX, 1,
+                    (50, 50, 50), 1)
 
 
+        imgBackground[175:175+216,909:909+216]=imgStudent
+        counter+=1
 
 
     #cv2.imshow("Webcam", img)
