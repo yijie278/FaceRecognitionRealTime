@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Result - Face Recognition System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .result-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .result-header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-header p {
+            color: #666;
+        }
+
+        .result-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .image-section {
+            text-align: center;
+        }
+
+        .image-section h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .image-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .match-section {
+            text-align: center;
+        }
+
+        .match-section h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .match-result {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .match-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .match-failure {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .match-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .match-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .match-success .match-title {
+            color: #155724;
+        }
+
+        .match-failure .match-title {
+            color: #721c24;
+        }
+
+        .student-info {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .student-id {
+            color: #667eea;
+        }
+
+        .attendance-count {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .distance-info {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">[EDU] Face Recognition System</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/attendance">Attendance</a></li>
+                <li><a href="/upload">Upload & Match</a></li>
+                <li><a href="/admin/login">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="result-header">
+            <h1>[SEARCH] Face Recognition Result</h1>
+            <p>Analysis of uploaded image and student identification</p>
+        </div>
+
+        <div class="result-container">
+            <div class="result-grid">
+                <div class="image-section">
+                    <h3>[IMG] Uploaded Image</h3>
+                    <div class="image-container">
+                        {% if uploaded_preview_base64 %}
+                            <img src="data:image/png;base64,{{ uploaded_preview_base64 }}" alt="Uploaded image" />
+                        {% else %}
+                            <p>Image preview not available</p>
+                        {% endif %}
+                    </div>
+                    {% if distance is not none %}
+                        <div class="distance-info">
+                            Recognition Distance: {{ '%.4f'|format(distance) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="match-section">
+                    <h3>[MATCH] Match Result</h3>
+                    {% if matched %}
+                        <div class="match-result match-success">
+                            <div class="match-icon">[OK]</div>
+                            <div class="match-title">Student Identified!</div>
+                            <p><strong>Student ID:</strong> <span class="student-id">{{ matched_id }}</span></p>
+                            {% if confidence %}
+                                <p><strong>Confidence:</strong> {{ confidence }}</p>
+                            {% endif %}
+                        </div>
+
+                        {% if student_info %}
+                            <div class="student-info">
+                                <h4>[USER] Student Information</h4>
+                                <div class="student-details">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Name</div>
+                                        <div class="detail-value">{{ student_info.name }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Major</div>
+                                        <div class="detail-value">{{ student_info.major }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Year</div>
+                                        <div class="detail-value">{{ student_info.year }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Standing</div>
+                                        <div class="detail-value">{{ student_info.standing }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Starting Year</div>
+                                        <div class="detail-value">{{ student_info.starting_year }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Total Attendance</div>
+                                        <div class="detail-value">
+                                            <span class="attendance-count">{{ student_info['Total attendance'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if student_photo_base64 %}
+                            <div class="image-container">
+                                <img src="data:image/png;base64,{{ student_photo_base64 }}" alt="Student Photo" />
+                                <p style="margin-top: 0.5rem; color: #666; font-size: 14px;">Student Photo from Database</p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="match-result match-failure">
+                            <div class="match-icon">[X]</div>
+                            <div class="match-title">No Match Found</div>
+                            <p>The uploaded image does not match any registered student.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/upload" class="btn">[UPLOAD] Upload Another Image</a>
+                <a href="/" class="btn btn-secondary">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
