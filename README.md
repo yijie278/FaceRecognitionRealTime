@@ -6,6 +6,24 @@ A comprehensive web application for student attendance management using real-tim
 
 ![System Demo](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Firebase](https://img.shields.io/badge/Firebase-Integrated-orange) ![Analytics](https://img.shields.io/badge/Analytics-Advanced-blue)
 
+<img width="1919" height="866" alt="Screenshot 2025-10-02 144140" src="https://github.com/user-attachments/assets/0c36930c-2205-4441-991f-924da99068ca" />
+<img width="1917" height="887" alt="Screenshot 2025-10-02 213742" src="https://github.com/user-attachments/assets/45f9d0fb-f172-4201-a357-afe467ffd2c4" />
+<img width="1901" height="866" alt="Screenshot 2025-10-03 001407" src="https://github.com/user-attachments/assets/70367b1e-30d8-4b9d-ac5b-4013679473a6" />
+<img width="1900" height="860" alt="Screenshot 2025-10-03 001454" src="https://github.com/user-attachments/assets/d53c33cf-77cb-455b-9a89-3ad78b1e761e" />
+
+<img width="1900" height="865" alt="Screenshot 2025-10-03 001423" src="https://github.com/user-attachments/assets/4f7064cb-0253-4d15-8e54-6c8246264692" />
+
+
+<img width="1919" height="911" alt="Screenshot 2025-10-02 213848" src="https://github.com/user-attachments/assets/2c20a352-0b3d-4151-8c62-96c4baa0a4e2" />
+
+<img width="1919" height="873" alt="Screenshot 2025-10-02 231225" src="https://github.com/user-attachments/assets/8a228ef0-21d7-4b95-ac2b-17cc311b164e" />
+<img width="1910" height="962" alt="Screenshot 2025-10-02 225630" src="https://github.com/user-attachments/assets/ef78cb0b-03e6-41b5-93ab-cbbd5a7ecc19" />
+
+<img width="1919" height="913" alt="Screenshot 2025-10-03 010250" src="https://github.com/user-attachments/assets/150b55b4-3d03-4142-ba1d-dbbb63dde931" />
+
+<img width="1919" height="911" alt="Screenshot 2025-10-03 011902" src="https://github.com/user-attachments/assets/e6f7ba51-3ff4-401b-a8ff-2c039e7fa9e3" />
+
+
 ## ✨ Features
 
 ### 🔥 **Core Features**
