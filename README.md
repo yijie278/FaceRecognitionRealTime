@@ -19,7 +19,8 @@ A comprehensive web application for student attendance management using real-tim
 <img width="1919" height="873" alt="Screenshot 2025-10-02 231225" src="https://github.com/user-attachments/assets/8a228ef0-21d7-4b95-ac2b-17cc311b164e" />
 <img width="1910" height="962" alt="Screenshot 2025-10-02 225630" src="https://github.com/user-attachments/assets/ef78cb0b-03e6-41b5-93ab-cbbd5a7ecc19" />
 
-<img width="1919" height="913" alt="Screenshot 2025-10-03 010250" src="https://github.com/user-attachments/assets/150b55b4-3d03-4142-ba1d-dbbb63dde931" />
+<img width="1913" height="742" alt="Screenshot 2025-10-03 004517" src="https://github.com/user-attachments/assets/c94e4887-37e0-45c8-a5da-2be749db57a4" />
+
 
 <img width="1919" height="911" alt="Screenshot 2025-10-03 011902" src="https://github.com/user-attachments/assets/e6f7ba51-3ff4-401b-a8ff-2c039e7fa9e3" />
 
