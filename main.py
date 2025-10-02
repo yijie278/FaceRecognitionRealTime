@@ -162,7 +162,7 @@ while True:
                 counter=0
                 modeType=0
                 studentInfo=[]
-                imgStudent=[]
+                imgStudent=[]c
                 imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
 
